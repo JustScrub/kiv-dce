@@ -1,0 +1,6 @@
+one_username      = "username"
+one_password      = "token"
+one_endpoint      = "https://nuada.zcu.cz/RPC2"
+
+#vm_admin_pass     = ""
+vm_backend_count = 1
