@@ -1,0 +1,4 @@
+- name: Provision Load Balancer
+  hosts: all
+  roles:
+    - role: common

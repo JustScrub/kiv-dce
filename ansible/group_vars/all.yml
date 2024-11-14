@@ -1,0 +1,3 @@
+ansible_user: nodeadm
+ansible_password: "{{ lookup('ansible.builtin.env', 'ANSIBLE_RMT_PASSWD') }}"
+ansible_ssh_private_key_file: "{{ playbook_dir }}/../keys/dce_key"

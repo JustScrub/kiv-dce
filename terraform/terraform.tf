@@ -35,7 +35,7 @@ resource "opennebula_virtual_machine" "vm_backend" {
   context = {
     NETWORK  = "YES"
     HOSTNAME = "$NAME"
-    SSH_PUBLIC_KEY = file("keys/id_dev.pub")
+    SSH_PUBLIC_KEY = file("keys/dce_key.pub")
   }
   os {
     arch = "x86_64"
@@ -60,7 +60,7 @@ resource "opennebula_virtual_machine" "vm_backend" {
     type = "ssh"
     user = "root"
     host = "${self.ip}"
-    private_key = file("keys/id_dev")
+    private_key = file("keys/dce_key")
   }
 
   provisioner "file" {
@@ -68,7 +68,72 @@ resource "opennebula_virtual_machine" "vm_backend" {
     destination = "/tmp"
   }
   provisioner "file" {
-    source = "keys/id_dev.pub"
+    source = "keys/dce_key.pub"
+    destination = "/tmp/id_dev.pub"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "export INIT_USER=${var.vm_admin_user}",
+      "export INIT_PASS=${var.vm_admin_pass}",
+      "export INIT_PUBKEY=$(cat /tmp/id_dev.pub)",
+      "export INIT_LOG=${var.vm_node_init_log}",
+      "export INIT_HOSTNAME=${self.name}",
+      "touch ${var.vm_node_init_log}",
+      "sh /tmp/init-node.sh",
+      "sh /tmp/init-users.sh",
+      "reboot"
+    ]
+  }
+}
+
+resource "opennebula_virtual_machine" "vm_frontend" {
+  count = 1
+  name = "dce-frontend"
+  description = "DCE frontend"
+  cpu = 1
+  vcpu = 1
+  memory = 1024
+  permissions = "600"
+  group = "users"
+
+  context = {
+    NETWORK  = "YES"
+    HOSTNAME = "$NAME"
+    SSH_PUBLIC_KEY = file("keys/dce_key.pub")
+  }
+  os {
+    arch = "x86_64"
+    boot = "disk0"
+  }
+  disk {
+    image_id = 602 #opennebula_image.os-image.id
+    target   = "vda"
+    size     = 6000 # 16GB
+  }
+
+  graphics {
+    listen = "0.0.0.0"
+    type   = "vnc"
+  }
+
+  nic {
+    network_id = var.vm_network_id
+  }
+
+  connection {
+    type = "ssh"
+    user = "root"
+    host = "${self.ip}"
+    private_key = file("keys/dce_key")
+  }
+
+  provisioner "file" {
+    source = "provisioning-scripts/"
+    destination = "/tmp"
+  }
+  provisioner "file" {
+    source = "keys/dce_key.pub"
     destination = "/tmp/id_dev.pub"
   }
 
@@ -89,6 +154,10 @@ resource "opennebula_virtual_machine" "vm_backend" {
 
 #-------OUTPUTS ------------
 
-output "test-master-vm_id" {
-  value = "${opennebula_virtual_machine.test-node-vm.*.ip}"
+output "backed-ips" {
+  value = "${opennebula_virtual_machine.vm_backend.*.ip}"
+}
+
+output "frontend-ips" {
+  value = "${opennebula_virtual_machine.vm_frontend.*.ip}"
 }
