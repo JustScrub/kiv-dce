@@ -10,8 +10,8 @@ on:
 # Defines custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker images that this workflow builds.
 env:
   REGISTRY: ghcr.io
-  LB_IMAGE_NAME: ${{ github.repository }}_load-balancer
-  BE_IMAGE_NAME: ${{ github.repository }}_backend
+  #LB_IMAGE_NAME: ${{ github.repository }}_load-balancer
+  #BE_IMAGE_NAME: ${{ github.repository }}_backend
 
 # There is a single job in this workflow. It's configured to run on the latest available version of Ubuntu.
 jobs:
@@ -34,6 +34,12 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: set repo names
+        run: |
+          echo "IMAGE_NAME=${GITHUB_REPOSITORY@L}" >> ${GITHUB_ENV}
+          echo "LB_IMAGE_NAME=${GITHUB_REPOSITORY@L}_load-balancer" >> ${GITHUB_ENV}
+          echo "BE_IMAGE_NAME=${GITHUB_REPOSITORY@L}_backend" >> ${GITHUB_ENV}
       # This step uses [docker/metadata-action](https://github.com/docker/metadata-action#about) to extract tags and labels that will be applied to the specified images. The `id` "meta" allows the output of this step to be referenced in a subsequent step. The `images` value provides the base names for the tags and labels.
 #      - name: Extract metadata (tags, labels) for Docker
 #        id: meta
