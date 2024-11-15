@@ -3,9 +3,9 @@ name: Create and publish Docker images of load balancer and backends
 
 # Configures this workflow to run every time a change is pushed to the branch called `release`.
 on:
-  - push:
-      branches: ['release']
-  - workflow_dispatch:
+  push:
+    branches: ['release']
+  workflow_dispatch:
 
 # Defines custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker images that this workflow builds.
 env:
