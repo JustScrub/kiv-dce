@@ -4,9 +4,9 @@
     name: ufw
     state: present
 
-- name: enable firewall on exposed ports
+- name: enable firewall on exposed ports and ssh
   become: yes
-  shell: ufw allow {{ app_port }}/tcp
+  shell: ufw allow {{ app_port }}/tcp && ufw allow 22/tcp && echo y | ufw enable
 
 #- name: Copy role files
 #  copy:

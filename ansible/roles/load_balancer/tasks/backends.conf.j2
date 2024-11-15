@@ -1,5 +1,5 @@
 upstream backend {
     {% for host in groups['backends'] %}
-    server {{ hostvars[host]['ansible_host'] }}:{{ be_port }} weight=1;
+    server {{ host }}:{{ be_port }} weight=1;
     {% endfor %}
 }
