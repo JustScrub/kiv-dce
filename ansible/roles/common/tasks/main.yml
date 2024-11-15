@@ -4,19 +4,19 @@
     name: ufw
     state: present
 
-- name: enable firewall on ports 80 and 443
+- name: enable firewall on exposed ports
   become: yes
-  shell: ufw allow 80 && ufw allow 443
+  shell: ufw allow {{ app_port }}/tcp
 
-- name: Copy role files
-  copy:
-    src: "{{ playbook_dir }}/../{{ item }}"
-    dest: /home/{{ ansible_user }}/
-  with_items: "{{ group_names }}"
+#- name: Copy role files
+#  copy:
+#    src: "{{ playbook_dir }}/../{{ item }}"
+#    dest: /home/{{ ansible_user }}/
+#  with_items: "{{ group_names }}"
 
-- name: build docker image(s)
-  become: yes
-  shell: >-
-    cd /home/{{ ansible_user }}/{{ item }} && 
-    docker build -t {{ item }} .
-  with_items: "{{ group_names }}"
+#- name: build docker image(s)
+#  become: yes
+#  shell: >-
+#    cd /home/{{ ansible_user }}/{{ item }} && 
+#    docker build -t {{ item }} .
+#  with_items: "{{ group_names }}"

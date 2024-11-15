@@ -12,5 +12,5 @@
     --restart always 
     --name dce_load_balancer 
     -v /home/{{ ansible_user }}/backends.conf:/etc/nginx/conf.d/backend-upstream.conf
-    -d -p {{ lb_port }}:80 ghcr.io/justscrub/kiv-dce_load-balancer:latest
+    -d -p {{ app_port }}:80 ghcr.io/justscrub/kiv-dce_load-balancer:latest
   ignore_errors: yes
