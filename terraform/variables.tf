@@ -34,13 +34,26 @@ variable "vm_backend_count" {
     type = number
     default = 1
 }
+
+variable "keys_path" {
+    description = "Path to the directory with SSH keys"
+    default = "../keys"
+}
+
+variable "vm_image_id" {
+    description = "ID of the VM OS image"
+    default = 612  # => "DSA Ubuntu 22.04"
+}
 # variable "vm_imagedatastore_id" {
 #     description = "Open Nebula datastore ID"
-#     default = 109 # => "nuada_ssd"
+#     default = 101 # => "nuada_pool"
+#               109 # => "nuada_ssd"
 # }
 # variable "vm_image_name" {
 #     description = "VM OS image name"
+#     default = "Ubuntu 22.04"
 # }
 # variable "vm_image_url"  {
 #     description = "VM OS image URL"
+#     default = "https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img"
 # }

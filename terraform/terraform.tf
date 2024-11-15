@@ -35,14 +35,14 @@ resource "opennebula_virtual_machine" "vm_backend" {
   context = {
     NETWORK  = "YES"
     HOSTNAME = "$NAME"
-    SSH_PUBLIC_KEY = file("keys/dce_key.pub")
+    SSH_PUBLIC_KEY = file("${var.keys_path}/dce_key.pub")
   }
   os {
     arch = "x86_64"
     boot = "disk0"
   }
   disk {
-    image_id = 602 #opennebula_image.os-image.id
+    image_id = "${var.vm_image_id}" #opennebula_image.os-image.id
     target   = "vda"
     size     = 6000 # 16GB
   }
@@ -60,7 +60,7 @@ resource "opennebula_virtual_machine" "vm_backend" {
     type = "ssh"
     user = "root"
     host = "${self.ip}"
-    private_key = file("keys/dce_key")
+    private_key = file("${var.keys_path}/dce_key")
   }
 
   provisioner "file" {
@@ -68,7 +68,7 @@ resource "opennebula_virtual_machine" "vm_backend" {
     destination = "/tmp"
   }
   provisioner "file" {
-    source = "keys/dce_key.pub"
+    source = "${var.keys_path}/dce_key.pub"
     destination = "/tmp/id_dev.pub"
   }
 
@@ -100,14 +100,14 @@ resource "opennebula_virtual_machine" "vm_frontend" {
   context = {
     NETWORK  = "YES"
     HOSTNAME = "$NAME"
-    SSH_PUBLIC_KEY = file("keys/dce_key.pub")
+    SSH_PUBLIC_KEY = file("${var.keys_path}/dce_key.pub")
   }
   os {
     arch = "x86_64"
     boot = "disk0"
   }
   disk {
-    image_id = 602 #opennebula_image.os-image.id
+    image_id = "${var.vm_image_id}"  #opennebula_image.os-image.id
     target   = "vda"
     size     = 6000 # 16GB
   }
@@ -125,7 +125,7 @@ resource "opennebula_virtual_machine" "vm_frontend" {
     type = "ssh"
     user = "root"
     host = "${self.ip}"
-    private_key = file("keys/dce_key")
+    private_key = file("${var.keys_path}/dce_key")
   }
 
   provisioner "file" {
@@ -133,7 +133,7 @@ resource "opennebula_virtual_machine" "vm_frontend" {
     destination = "/tmp"
   }
   provisioner "file" {
-    source = "keys/dce_key.pub"
+    source = "${var.keys_path}/dce_key.pub"
     destination = "/tmp/id_dev.pub"
   }
 
@@ -154,7 +154,7 @@ resource "opennebula_virtual_machine" "vm_frontend" {
 
 #-------OUTPUTS ------------
 
-output "backed-ips" {
+output "backend-ips" {
   value = "${opennebula_virtual_machine.vm_backend.*.ip}"
 }
 

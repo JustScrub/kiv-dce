@@ -1,3 +1,2 @@
 keys/*
-terraform.tfvars
-.terraform.lock.hcl
+ansible/inv.ini

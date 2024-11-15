@@ -1,4 +1,14 @@
-- name: Provision Load Balancer
+- name: Provision nodes
   hosts: all
   roles:
     - role: common
+
+- name: Provision load balancer
+  hosts: load_balancer
+  roles:
+    - role: load_balancer
+
+- name: Provision backends
+  hosts: backends
+  roles:
+    - role: backends

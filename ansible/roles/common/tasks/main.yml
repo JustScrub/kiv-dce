@@ -1,18 +1,22 @@
+- name: install firewall
+  become: yes
+  apt:
+    name: ufw
+    state: present
+
+- name: enable firewall on ports 80 and 443
+  become: yes
+  shell: ufw allow 80 && ufw allow 443
+
 - name: Copy role files
   copy:
     src: "{{ playbook_dir }}/../{{ item }}"
-    dest: /home/{{ ansible_user }}/{{ item }}
+    dest: /home/{{ ansible_user }}/
   with_items: "{{ group_names }}"
 
 - name: build docker image(s)
   become: yes
-  shell: |
-    cd /home/{{ ansible_user }}/{{ item }}
+  shell: >-
+    cd /home/{{ ansible_user }}/{{ item }} && 
     docker build -t {{ item }} .
-  with_items: "{{ group_names }}"
-
-- name: run docker container(s)
-  become: yes
-  shell: |
-    docker run --restart always -d -p 80:8080 {{ item }}
   with_items: "{{ group_names }}"

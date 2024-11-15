@@ -1,0 +1,6 @@
+
+- name: run docker container(s)
+  become: yes
+  shell: |
+    docker run --restart always --name dce_backends -d -p {{ be_port }}:7777 backends
+  ignore_errors: yes

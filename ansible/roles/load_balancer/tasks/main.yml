@@ -1,0 +1,16 @@
+
+- name: create nginx backends config
+  become: yes
+  template:
+    src: backends.conf.j2
+    dest: /home/{{ ansible_user }}/backends.conf
+
+- name: run docker container(s)
+  become: yes
+  shell: >-
+    docker run 
+    --restart always 
+    --name dce_load_balancer 
+    -v /home/{{ ansible_user }}/backends.conf:/etc/nginx/conf.d/backend-upstream.conf
+    -d -p {{ lb_port }}:80 load_balancer
+  ignore_errors: yes
