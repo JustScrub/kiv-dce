@@ -5,6 +5,14 @@
     src: backends.conf.j2
     dest: /home/{{ ansible_user }}/backends.conf
 
+- name: remove existing docker container(s)
+  become: yes
+  shell: >-
+    docker stop dce_load_balancer &&
+    docker rm -f dce_load_balancer &&
+    docker rmi -f ghcr.io/justscrub/kiv-dce_load-balancer:latest
+  ignore_errors: yes
+
 - name: run docker container(s)
   become: yes
   shell: >-

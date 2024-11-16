@@ -1,1 +1,1 @@
-Part of the repository, namely in the `backends` directory, has been copied (and the ports modified) from https://github.com/lvthillo/python-flask-docker. 
+Part of the repository, namely in the `backends` directory, has been copied and modified from https://github.com/lvthillo/python-flask-docker. The application listens on a different port and echoes the URI and host IP set via environment variable (formerly container IP)

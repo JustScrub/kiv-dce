@@ -1,6 +1,18 @@
 
+- name: remove existing docker container(s)
+  become: yes
+  shell: >-
+    docker stop dce_backends &&
+    docker rm -f dce_backends &&
+    docker rmi -f ghcr.io/justscrub/kiv-dce_backend:latest
+  ignore_errors: yes
+
 - name: run docker container(s)
   become: yes
-  shell: |
-    docker run --restart always --name dce_backends -d -p {{ app_port }}:7777 ghcr.io/justscrub/kiv-dce_backend:latest
+  shell: >-
+    docker run 
+    --restart always 
+    --name dce_backends 
+    --env HOST_IP={{ inventory_hostname }}
+    -d -p {{ app_port }}:7777 ghcr.io/justscrub/kiv-dce_backend:latest
   ignore_errors: yes

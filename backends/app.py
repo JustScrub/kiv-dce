@@ -1,14 +1,16 @@
 from flask import Flask,render_template
-import socket
+#import socket
+import os
 
 app = Flask(__name__)
 
-@app.route("/")
-def index():
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def index(path):
     try:
-        host_name = socket.gethostname()
-        host_ip = socket.gethostbyname(host_name)
-        return render_template('index.html', hostname=host_name, ip=host_ip)
+        #host_name = socket.gethostname()
+        #host_ip = socket.gethostbyname(host_name)
+        return render_template('index.html', path=path, ip=os.environ.get("HOST_IP"))
     except:
         return render_template('error.html')
 
