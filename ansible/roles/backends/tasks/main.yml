@@ -14,5 +14,5 @@
     --restart always 
     --name dce_backends 
     --env HOST_IP={{ inventory_hostname }}
-    -d -p {{ app_port }}:7777 ghcr.io/justscrub/kiv-dce_backend:latest
+    -d -p {{ be_port }}:7777 ghcr.io/justscrub/kiv-dce_backend:latest
   ignore_errors: yes
