@@ -9,5 +9,5 @@ cd ..
 
 cd ansible
 python gen_inventory.py ../terraform/terraform.tfstate > inventory
-ansible-playbook -i inventory playbook.yml
+ansible-playbook -i inventory app.yml
 cd ..
