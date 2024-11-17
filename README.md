@@ -36,7 +36,7 @@ The resulting images can then be pulled from `ghcr.io/<username>/<repo-name>_bac
 
 The terraform directory includes files necessary to initialize a terraform project. But before initialization, there are some steps to be done before-hand. 
 
-First, in the root directory of the repository (at the same level as this README), create a `keys` directory. Generate SSH keys to the directory using e.g. ssh-keygen. These will be used to SSH into your VMs (and are used by ansible). Try not to push the keys to a public repository (the top-level .gitignore should handle that). Then, go to the terraform directory, remove the `.template` suffix from `terraform.tfvars.template` and fill the values, including admin password (needs to be uncomented by deleting the hash character '#'). 
+First, in the root directory of the repository (at the same level as this README), create a `keys` directory. Generate SSH keys to the directory using e.g. ssh-keygen. **THE KEY FILE NAMES MUST BE** `dce_key` (private) and `dce_key.pub` (public)!! These will be used to SSH into your VMs (and are used by ansible). Try not to push the keys to a public repository (the top-level .gitignore should handle that). Then, go to the terraform directory, remove the `.template` suffix from `terraform.tfvars.template` and fill the values, including admin password (needs to be uncomented by deleting the hash character '#'). 
 - one_username = login to your OpenNebula account
 - one_password = valid authorization token generated in OpenNebula
 - one_endpoint = the URL to your OpenNebula RPC interface
@@ -47,7 +47,7 @@ There are more variables defined in the `variables.tf` file. You can look into t
 
 The `provisioning-scripts` directory includes bash scripts that initialize the VMs: the admin user is created, your generated public key is added to the authorized keys of the VM and SSH root login is disabled. Also, docker is installed.
 
-To deploy, run `terraform init` and then `terraform apply` from the terraform directory.
+To deploy, run `terraform init` and then `terraform apply` from the terraform directory. Applying may fail, in that case, just rerun the command.
 
 ### Ansible
 
@@ -58,10 +58,6 @@ First, Ansible needs to know the IPs of your backends and of your load balancer.
 After the inventory is created, you can run `ansible-playbook -i inventory app.yml` to provision the VMs.
 
 Ansible downloads the UFW firewall and allows traffic on all necessary ports. Then proceeds to run the backend app / load balancer inside a docker container. The backend container is pulled from the GitHub container repository and run, with the 7777 (container) port mapped to host's 8080 port and the host's IP included in an environment variable. As for the load balancer, the NGINX upstream config is generated from the list of backend IPs and the load balancer container is run, binding the generated config to the container and publishing port 80.
-
-### All-in-one script
-
-You can build the infrastructure without manually entering the commands. You just have to generate the SSH keys and fill terraform variables as described in the Terraform section, then run the `init_infra.sh` script from the root of the project.
 
 ### Done
 

@@ -1,6 +1,8 @@
+# do not run this script, it is just a reference
 
 # get SSH keys into ./keys
 # create terraform/terraform.tfvars with the correct values
+# install terraform and ansible (requires sshpass)
 
 cd terraform
 terraform init
